@@ -1,24 +1,30 @@
 version: "3.9"
 
 services:
-  myshop-db:
-    image: postgres:15
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
     restart: always
-    container_name: myshop-db
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: ecommerce_db
     ports:
-      - "5433:5432" # ใช้ 5433 ภายนอก เพื่อไม่ชนกับ coolify-db
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: cschonlapat@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "5051:80"
+      - "5050:80"
     depends_on:
-      - myshop-db
+      - postgres
+
+volumes:
+  postgres_data:
